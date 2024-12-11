@@ -5,18 +5,18 @@ using UnityEngine;
 public class EnemyAI : MonoBehaviour
 {
     [Header("Movement Settings")]
-    public float moveSpeed = 3f; 
+    public float moveSpeed = 3f;
 
     [Header("References")]
-    public GridManager gridManager; 
+    public GridManager gridManager;
     public ObstacleData obstacleData; // Reference to obstacle data
-    public Transform player; 
+    public Transform player;
     private TurnManager turnManager; // Reference to TurnManager
 
-    private bool isMoving = false; 
+    private bool isMoving = false;
     private Vector3 targetPosition; // The next target position
     private Vector3 currentTilePosition; // The enemy's current tile position
-    private List<GridManager.Node> path; 
+    private List<GridManager.Node> path;
 
     private Collider playerCollider; // Player collider reference
 
@@ -50,6 +50,12 @@ public class EnemyAI : MonoBehaviour
         {
             StartCoroutine(FollowPath());
         }
+        else
+        {
+            // No path found, skip the turn
+            Debug.Log("No path found to the player, ending enemy's turn.");
+            turnManager.EndEnemyTurn();
+        }
     }
 
     // Start the enemy's turn
@@ -61,7 +67,7 @@ public class EnemyAI : MonoBehaviour
 
     private GridManager.Node GetNodeFromPosition(Vector3 position)
     {
-        return gridManager.gridNodes[ 
+        return gridManager.gridNodes[
             Mathf.RoundToInt(position.x / gridManager.tileSpacing),
             Mathf.RoundToInt(position.z / gridManager.tileSpacing)
         ];
